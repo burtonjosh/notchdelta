@@ -103,7 +103,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * for solving each cell's Delta/Notch signalling ODE system at each time step, using information about neighbouring
  * cells through the {{{CellData}}} class.
  */
-#include "DeltaNotchSrnModel.hpp"
+#include "MyDeltaNotchSrnModel.hpp"
 /*
  * The next header defines the simulation class modifier corresponding to the Delta-Notch SRN model.
  * This modifier leads to the {{{CellData}}} cell property being updated at each timestep to deal with Delta-Notch signalling.
