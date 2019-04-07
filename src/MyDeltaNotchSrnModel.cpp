@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MyDeltaNotchSrnModel.hpp"
 
 DeltaNotchSrnModel::DeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
-    : AbstractOdeSrnModel(2, pOdeSolver)
+    : AbstractOdeSrnModel(6, pOdeSolver)
 {
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
@@ -100,27 +100,55 @@ void DeltaNotchSrnModel::UpdateDeltaNotch()
     assert(mpCell != nullptr);
 
     double mean_delta = mpCell->GetCellData()->GetItem("mean delta");
-    mpOdeSystem->SetParameter("Mean Delta", mean_delta);
+    mpOdeSystem->SetParameter("mean delta", mean_delta);
 }
 
-double DeltaNotchSrnModel::GetNotch()
+double DeltaNotchSrnModel::GetCellSurfaceNotch()
 {
     assert(mpOdeSystem != nullptr);
-    double notch = mpOdeSystem->rGetStateVariables()[0];
-    return notch;
+    double cell_surface_notch = mpOdeSystem->rGetStateVariables()[0];
+    return cell_surface_notch;
+}
+
+double DeltaNotchSrnModel::GetSudxDependentNotch()
+{
+    assert(mpOdeSystem != nullptr);
+    double sudx_dependent_notch = mpOdeSystem->rGetStateVariables()[1];
+    return sudx_dependent_notch;
+}
+
+double DeltaNotchSrnModel::GetDxDependentEarlyEndosomeNotch()
+{
+    assert(mpOdeSystem != nullptr);
+    double dx_dependent_early_endosome_notch = mpOdeSystem->rGetStateVariables()[2];
+    return dx_dependent_early_endosome_notch;
+}
+
+double DeltaNotchSrnModel::GetDxDependentLateEndosomeNotch()
+{
+    assert(mpOdeSystem != nullptr);
+    double dx_dependent_late_endosome_notch = mpOdeSystem->rGetStateVariables()[3];
+    return dx_dependent_late_endosome_notch;
+}
+
+double DeltaNotchSrnModel::GetNotchIntracellularDomain()
+{
+    assert(mpOdeSystem != nullptr);
+    double notch_intracellular_domain = mpOdeSystem->rGetStateVariables()[4];
+    return notch_intracellular_domain;
 }
 
 double DeltaNotchSrnModel::GetDelta()
 {
     assert(mpOdeSystem != nullptr);
-    double delta = mpOdeSystem->rGetStateVariables()[1];
+    double delta = mpOdeSystem->rGetStateVariables()[5];
     return delta;
 }
 
 double DeltaNotchSrnModel::GetMeanNeighbouringDelta()
 {
     assert(mpOdeSystem != nullptr);
-    double mean_neighbouring_delta = mpOdeSystem->GetParameter("Mean Delta");
+    double mean_neighbouring_delta = mpOdeSystem->GetParameter("mean delta");
     return mean_neighbouring_delta;
 }
 

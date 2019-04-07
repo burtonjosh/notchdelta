@@ -123,9 +123,29 @@ public:
     void UpdateDeltaNotch();
 
     /**
-     * @return the current Notch level in this cell.
+     * @return the current cell surface Notch level in this cell.
      */
-    double GetNotch();
+    double GetCellSurfaceNotch();
+
+    /**
+     * @return the current suppressor of deltex dependent Notch level in this cell.
+     */
+    double GetSudxDependentNotch();
+
+    /**
+     * @return the current deltex dependent early endosome Notch level in this cell.
+     */
+    double GetDxDependentEarlyEndosomeNotch();
+
+    /**
+     * @return the current deltex dependent late endosome Notch level in this cell.
+     */
+    double GetDxDependentLateEndosomeNotch();
+
+    /**
+     * @return the current Notch intracellular domain level in this cell.
+     */
+    double GetNotchIntracellularDomain();
 
     /**
      * @return the current Delta level in this cell.

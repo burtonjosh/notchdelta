@@ -108,7 +108,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * The next header defines the simulation class modifier corresponding to the Delta-Notch SRN model.
  * This modifier leads to the {{{CellData}}} cell property being updated at each timestep to deal with Delta-Notch signalling.
  */
-#include "DeltaNotchTrackingModifier.hpp"
+#include "MyDeltaNotchTrackingModifier.hpp"
+#include "Debug.hpp"
 
 /* Having included all the necessary header files, we proceed by defining the test class.
  */
@@ -153,6 +154,11 @@ public:
             std::vector<double> initial_conditions;
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
+            initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
+            initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
+            initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
+            initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
+
             DeltaNotchSrnModel* p_srn_model = new DeltaNotchSrnModel();
             p_srn_model->SetInitialConditions(initial_conditions);
 
@@ -178,14 +184,14 @@ public:
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.SetOutputDirectory("TestVertexBasedMonolayerWithDeltaNotch");
         simulator.SetSamplingTimestepMultiple(10);
-        simulator.SetEndTime(1.0);
+        simulator.SetEndTime(50.0);
 
         /* Then, we define the modifier class, which automatically updates the values of Delta and Notch within the cells in {{{CellData}}} and passes it to the simulation.*/
-        MAKE_PTR(DeltaNotchTrackingModifier<2>, p_modifier);
+        MAKE_PTR(MyDeltaNotchTrackingModifier<2>, p_modifier);
         simulator.AddSimulationModifier(p_modifier);
 
-        MAKE_PTR(NagaiHondaForce<2>, p_force);
-        simulator.AddForce(p_force);
+        // MAKE_PTR(NagaiHondaForce<2>, p_force);
+        // simulator.AddForce(p_force);
 
         /* This modifier assigns target areas to each cell, which are required by the {{{NagaiHondaForce}}}.
          */
@@ -210,7 +216,7 @@ public:
      * In the next test we run a similar simulation as before, but this time with node-based
      * 'overlapping spheres' model.
      */
-    void TestNodeBasedMonolayerWithDeltaNotch()
+    void XestNodeBasedMonolayerWithDeltaNotch()
     {
         /* We include the next line because HoneycombMeshGenerator, used in this test, is not
          *  yet implemented in parallel. */
@@ -263,7 +269,7 @@ public:
         simulator.SetEndTime(5.0);
 
         /* Again we define the modifier class, which automatically updates the values of Delta and Notch within the cells in {{{CellData}}} and passes it to the simulation.*/
-        MAKE_PTR(DeltaNotchTrackingModifier<2>, p_modifier);
+        MAKE_PTR(MyDeltaNotchTrackingModifier<2>, p_modifier);
         simulator.AddSimulationModifier(p_modifier);
 
         /* As we are using a node-based cell population, we use an appropriate force law. */
