@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DELTANOTCHODESYSTEM_HPP_
-#define DELTANOTCHODESYSTEM_HPP_
+#ifndef MYDELTANOTCHODESYSTEM_HPP_
+#define MYDELTANOTCHODESYSTEM_HPP_
 
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
@@ -50,7 +50,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * model of delta-notch intercellular signalling" (Journal of Theoretical
  * Biology 183:429-446, 1996).
  */
-class DeltaNotchOdeSystem : public AbstractOdeSystem
+class MyDeltaNotchOdeSystem : public AbstractOdeSystem
 {
 private:
 
@@ -76,12 +76,12 @@ public:
      *
      * @param stateVariables optional initial conditions for state variables (only used in archiving)
      */
-    DeltaNotchOdeSystem(std::vector<double> stateVariables=std::vector<double>());
+    MyDeltaNotchOdeSystem(std::vector<double> stateVariables=std::vector<double>());
 
     /**
      * Destructor.
      */
-    ~DeltaNotchOdeSystem();
+    ~MyDeltaNotchOdeSystem();
 
     /**
      * Compute the RHS of the  Collier et al. system of ODEs.
@@ -98,7 +98,7 @@ public:
 
 // Declare identifier for the serializer
 #include "SerializationExportWrapper.hpp"
-CHASTE_CLASS_EXPORT(DeltaNotchOdeSystem)
+CHASTE_CLASS_EXPORT(MyDeltaNotchOdeSystem)
 
 namespace boost
 {
@@ -109,7 +109,7 @@ namespace serialization
  */
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const DeltaNotchOdeSystem * t, const unsigned int file_version)
+    Archive & ar, const MyDeltaNotchOdeSystem * t, const unsigned int file_version)
 {
     const std::vector<double>& state_variables = t->rGetConstStateVariables();
     ar & state_variables;
@@ -120,15 +120,15 @@ inline void save_construct_data(
  */
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, DeltaNotchOdeSystem * t, const unsigned int file_version)
+    Archive & ar, MyDeltaNotchOdeSystem * t, const unsigned int file_version)
 {
     std::vector<double> state_variables;
     ar & state_variables;
 
     // Invoke inplace constructor to initialise instance
-    ::new(t)DeltaNotchOdeSystem(state_variables);
+    ::new(t)MyDeltaNotchOdeSystem(state_variables);
 }
 }
 } // namespace ...
 
-#endif /*DELTANOTCHODESYSTEM_HPP_*/
+#endif /*MYDELTANOTCHODESYSTEM_HPP_*/

@@ -133,7 +133,7 @@ public:
         EXIT_IF_PARALLEL;
 
         /* First we create a regular vertex mesh. */
-        HoneycombVertexMeshGenerator generator(5, 5);
+        HoneycombVertexMeshGenerator generator(30, 15);
         MutableVertexMesh<2,2>* p_mesh = generator.GetMesh();
 
         /* We then create some cells, each with a cell-cycle model, {{{UniformG1GenerationalCellCycleModel}}} and a subcellular reaction network model
@@ -159,7 +159,7 @@ public:
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
 
-            DeltaNotchSrnModel* p_srn_model = new DeltaNotchSrnModel();
+            MyDeltaNotchSrnModel* p_srn_model = new MyDeltaNotchSrnModel();
             p_srn_model->SetInitialConditions(initial_conditions);
 
             CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
@@ -184,7 +184,7 @@ public:
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.SetOutputDirectory("TestVertexBasedMonolayerWithDeltaNotch");
         simulator.SetSamplingTimestepMultiple(10);
-        simulator.SetEndTime(50.0);
+        simulator.SetEndTime(35.0);
 
         /* Then, we define the modifier class, which automatically updates the values of Delta and Notch within the cells in {{{CellData}}} and passes it to the simulation.*/
         MAKE_PTR(MyDeltaNotchTrackingModifier<2>, p_modifier);
@@ -246,7 +246,7 @@ public:
             std::vector<double> initial_conditions;
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
             initial_conditions.push_back(RandomNumberGenerator::Instance()->ranf());
-            DeltaNotchSrnModel* p_srn_model = new DeltaNotchSrnModel();
+            MyDeltaNotchSrnModel* p_srn_model = new MyDeltaNotchSrnModel();
             p_srn_model->SetInitialConditions(initial_conditions);
 
             CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));

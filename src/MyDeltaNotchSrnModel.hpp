@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef DELTANOTCHSRNMODEL_HPP_
-#define DELTANOTCHSRNMODEL_HPP_
+#ifndef MYDELTANOTCHSRNMODEL_HPP_
+#define MYDELTANOTCHSRNMODEL_HPP_
 
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
@@ -47,7 +47,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * \todo #2752 document this class more thoroughly here
  */
-class DeltaNotchSrnModel : public AbstractOdeSrnModel
+class MyDeltaNotchSrnModel : public AbstractOdeSrnModel
 {
 private:
 
@@ -78,7 +78,7 @@ protected:
      *
      * @param rModel  the SRN model to copy.
      */
-    DeltaNotchSrnModel(const DeltaNotchSrnModel& rModel);
+    MyDeltaNotchSrnModel(const MyDeltaNotchSrnModel& rModel);
 
 public:
 
@@ -87,7 +87,7 @@ public:
      *
      * @param pOdeSolver An optional pointer to a cell-cycle model ODE solver object (allows the use of different ODE solvers)
      */
-    DeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver = boost::shared_ptr<AbstractCellCycleModelOdeSolver>());
+    MyDeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver = boost::shared_ptr<AbstractCellCycleModelOdeSolver>());
 
     /**
      * Overridden builder method to create new copies of
@@ -170,8 +170,8 @@ public:
 
 // Declare identifier for the serializer
 #include "SerializationExportWrapper.hpp"
-CHASTE_CLASS_EXPORT(DeltaNotchSrnModel)
+CHASTE_CLASS_EXPORT(MyDeltaNotchSrnModel)
 #include "CellCycleModelOdeSolverExportWrapper.hpp"
-EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(DeltaNotchSrnModel)
+EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(MyDeltaNotchSrnModel)
 
-#endif /* DELTANOTCHSRNMODEL_HPP_ */
+#endif /* MYDELTANOTCHSRNMODEL_HPP_ */

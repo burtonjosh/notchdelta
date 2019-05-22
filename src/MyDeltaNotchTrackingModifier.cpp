@@ -70,18 +70,27 @@ void MyDeltaNotchTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
     // Make sure the cell population is updated
     rCellPopulation.Update();
     MARK;
+    c_vector<double,2> population_centroid = rCellPopulation.GetCentroidOfCellPopulation();
     // First recover each cell's Notch and Delta concentrations from the ODEs and store in CellData
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-        DeltaNotchSrnModel* p_model = static_cast<DeltaNotchSrnModel*>(cell_iter->GetSrnModel());
+        MyDeltaNotchSrnModel* p_model = static_cast<MyDeltaNotchSrnModel*>(cell_iter->GetSrnModel());
         double this_delta                             = p_model->GetDelta();
         double this_cell_surface_notch                = p_model->GetCellSurfaceNotch();
         double this_sudx_dependent_notch              = p_model->GetSudxDependentNotch();
         double this_dx_dependent_early_endosome_notch = p_model->GetDxDependentEarlyEndosomeNotch();
         double this_dx_dependent_late_endosome_notch  = p_model->GetDxDependentLateEndosomeNotch();
         double this_notch_intracellular_domain        = p_model->GetNotchIntracellularDomain();
+
+        c_vector<double,2> this_centroid = rCellPopulation.GetLocationOfCellCentre(*cell_iter);
+        c_vector<double,2> this_distance_to_tissue_centre;
+        this_distance_to_tissue_centre(0) = 0.0;
+        this_distance_to_tissue_centre(1) = 0.0;
+        this_distance_to_tissue_centre = this_centroid - population_centroid;
+        PRINT_VECTOR(this_distance_to_tissue_centre);
+        double this_x_distance = fabs(this_distance_to_tissue_centre[0]);
 
         double total_notch = this_cell_surface_notch + this_sudx_dependent_notch +
                              this_dx_dependent_early_endosome_notch + this_dx_dependent_late_endosome_notch +
@@ -95,6 +104,7 @@ void MyDeltaNotchTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
         cell_iter->GetCellData()->SetItem("notch intracellular domain", this_notch_intracellular_domain);
         cell_iter->GetCellData()->SetItem("total notch", total_notch);
         cell_iter->GetCellData()->SetItem("delta", this_delta);
+        cell_iter->GetCellData()->SetItem("x distance", this_x_distance);
     }
 
     // Next iterate over the population to compute and store each cell's neighbouring Delta concentration in CellData

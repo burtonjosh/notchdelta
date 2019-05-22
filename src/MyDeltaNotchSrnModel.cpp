@@ -35,17 +35,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "MyDeltaNotchSrnModel.hpp"
 
-DeltaNotchSrnModel::DeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
+MyDeltaNotchSrnModel::MyDeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
     : AbstractOdeSrnModel(6, pOdeSolver)
 {
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
 #ifdef CHASTE_CVODE
-        mpOdeSolver = CellCycleModelOdeSolver<DeltaNotchSrnModel, CvodeAdaptor>::Instance();
+        mpOdeSolver = CellCycleModelOdeSolver<MyDeltaNotchSrnModel, CvodeAdaptor>::Instance();
         mpOdeSolver->Initialise();
         mpOdeSolver->SetMaxSteps(10000);
 #else
-        mpOdeSolver = CellCycleModelOdeSolver<DeltaNotchSrnModel, RungeKutta4IvpOdeSolver>::Instance();
+        mpOdeSolver = CellCycleModelOdeSolver<MyDeltaNotchSrnModel, RungeKutta4IvpOdeSolver>::Instance();
         mpOdeSolver->Initialise();
         SetDt(0.001);
 #endif //CHASTE_CVODE
@@ -53,7 +53,7 @@ DeltaNotchSrnModel::DeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleModelO
     assert(mpOdeSolver->IsSetUp());
 }
 
-DeltaNotchSrnModel::DeltaNotchSrnModel(const DeltaNotchSrnModel& rModel)
+MyDeltaNotchSrnModel::MyDeltaNotchSrnModel(const MyDeltaNotchSrnModel& rModel)
     : AbstractOdeSrnModel(rModel)
 {
     /*
@@ -72,15 +72,15 @@ DeltaNotchSrnModel::DeltaNotchSrnModel(const DeltaNotchSrnModel& rModel)
      */
 
     assert(rModel.GetOdeSystem());
-    SetOdeSystem(new DeltaNotchOdeSystem(rModel.GetOdeSystem()->rGetStateVariables()));
+    SetOdeSystem(new MyDeltaNotchOdeSystem(rModel.GetOdeSystem()->rGetStateVariables()));
 }
 
-AbstractSrnModel* DeltaNotchSrnModel::CreateSrnModel()
+AbstractSrnModel* MyDeltaNotchSrnModel::CreateSrnModel()
 {
-    return new DeltaNotchSrnModel(*this);
+    return new MyDeltaNotchSrnModel(*this);
 }
 
-void DeltaNotchSrnModel::SimulateToCurrentTime()
+void MyDeltaNotchSrnModel::SimulateToCurrentTime()
 {
     // Custom behaviour
     UpdateDeltaNotch();
@@ -89,70 +89,73 @@ void DeltaNotchSrnModel::SimulateToCurrentTime()
     AbstractOdeSrnModel::SimulateToCurrentTime();
 }
 
-void DeltaNotchSrnModel::Initialise()
+void MyDeltaNotchSrnModel::Initialise()
 {
-    AbstractOdeSrnModel::Initialise(new DeltaNotchOdeSystem);
+    AbstractOdeSrnModel::Initialise(new MyDeltaNotchOdeSystem);
 }
 
-void DeltaNotchSrnModel::UpdateDeltaNotch()
+void MyDeltaNotchSrnModel::UpdateDeltaNotch()
 {
     assert(mpOdeSystem != nullptr);
     assert(mpCell != nullptr);
 
     double mean_delta = mpCell->GetCellData()->GetItem("mean delta");
     mpOdeSystem->SetParameter("mean delta", mean_delta);
+
+    double x_distance = mpCell->GetCellData()->GetItem("x distance");
+    mpOdeSystem->SetParameter("x distance", x_distance);
 }
 
-double DeltaNotchSrnModel::GetCellSurfaceNotch()
+double MyDeltaNotchSrnModel::GetCellSurfaceNotch()
 {
     assert(mpOdeSystem != nullptr);
     double cell_surface_notch = mpOdeSystem->rGetStateVariables()[0];
     return cell_surface_notch;
 }
 
-double DeltaNotchSrnModel::GetSudxDependentNotch()
+double MyDeltaNotchSrnModel::GetSudxDependentNotch()
 {
     assert(mpOdeSystem != nullptr);
     double sudx_dependent_notch = mpOdeSystem->rGetStateVariables()[1];
     return sudx_dependent_notch;
 }
 
-double DeltaNotchSrnModel::GetDxDependentEarlyEndosomeNotch()
+double MyDeltaNotchSrnModel::GetDxDependentEarlyEndosomeNotch()
 {
     assert(mpOdeSystem != nullptr);
     double dx_dependent_early_endosome_notch = mpOdeSystem->rGetStateVariables()[2];
     return dx_dependent_early_endosome_notch;
 }
 
-double DeltaNotchSrnModel::GetDxDependentLateEndosomeNotch()
+double MyDeltaNotchSrnModel::GetDxDependentLateEndosomeNotch()
 {
     assert(mpOdeSystem != nullptr);
     double dx_dependent_late_endosome_notch = mpOdeSystem->rGetStateVariables()[3];
     return dx_dependent_late_endosome_notch;
 }
 
-double DeltaNotchSrnModel::GetNotchIntracellularDomain()
+double MyDeltaNotchSrnModel::GetNotchIntracellularDomain()
 {
     assert(mpOdeSystem != nullptr);
     double notch_intracellular_domain = mpOdeSystem->rGetStateVariables()[4];
     return notch_intracellular_domain;
 }
 
-double DeltaNotchSrnModel::GetDelta()
+double MyDeltaNotchSrnModel::GetDelta()
 {
     assert(mpOdeSystem != nullptr);
     double delta = mpOdeSystem->rGetStateVariables()[5];
     return delta;
 }
 
-double DeltaNotchSrnModel::GetMeanNeighbouringDelta()
+double MyDeltaNotchSrnModel::GetMeanNeighbouringDelta()
 {
     assert(mpOdeSystem != nullptr);
     double mean_neighbouring_delta = mpOdeSystem->GetParameter("mean delta");
     return mean_neighbouring_delta;
 }
 
-void DeltaNotchSrnModel::OutputSrnModelParameters(out_stream& rParamsFile)
+void MyDeltaNotchSrnModel::OutputSrnModelParameters(out_stream& rParamsFile)
 {
     // No new parameters to output, so just call method on direct parent class
     AbstractOdeSrnModel::OutputSrnModelParameters(rParamsFile);
@@ -160,6 +163,6 @@ void DeltaNotchSrnModel::OutputSrnModelParameters(out_stream& rParamsFile)
 
 // Declare identifier for the serializer
 #include "SerializationExportWrapperForCpp.hpp"
-CHASTE_CLASS_EXPORT(DeltaNotchSrnModel)
+CHASTE_CLASS_EXPORT(MyDeltaNotchSrnModel)
 #include "CellCycleModelOdeSolverExportWrapper.hpp"
-EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(DeltaNotchSrnModel)
+EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(MyDeltaNotchSrnModel)
