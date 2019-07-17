@@ -40,15 +40,15 @@ MyDeltaNotchSrnModel::MyDeltaNotchSrnModel(boost::shared_ptr<AbstractCellCycleMo
 {
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
-#ifdef CHASTE_CVODE
-        mpOdeSolver = CellCycleModelOdeSolver<MyDeltaNotchSrnModel, CvodeAdaptor>::Instance();
-        mpOdeSolver->Initialise();
-        mpOdeSolver->SetMaxSteps(10000);
-#else
+// #ifdef CHASTE_CVODE
+//         mpOdeSolver = CellCycleModelOdeSolver<MyDeltaNotchSrnModel, CvodeAdaptor>::Instance();
+//         mpOdeSolver->Initialise();
+//         mpOdeSolver->SetMaxSteps(10000);
+// #else
         mpOdeSolver = CellCycleModelOdeSolver<MyDeltaNotchSrnModel, RungeKutta4IvpOdeSolver>::Instance();
         mpOdeSolver->Initialise();
-        SetDt(0.001);
-#endif //CHASTE_CVODE
+        SetDt(0.5);
+// #endif //CHASTE_CVODE
     }
     assert(mpOdeSolver->IsSetUp());
 }

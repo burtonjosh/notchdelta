@@ -96,12 +96,12 @@ void MyDeltaNotchOdeSystem::EvaluateYDerivatives(double time, const std::vector<
     double k_11 = 1.0;
     double k_12 = 70.0;
     double k_13 = 0.06;
-    double c_3 = 14.0;
-    double c_4 = 14.0;
-    double c_8a = 14.0;
-    double c_8b = 14.0;
-    double c_9 = 14.0;
-    double c_10 = 14.0;
+    double c_3 = 320.0;
+    double c_4 = 350.0;
+    double c_8a = 5.7;
+    double c_8b = 0.00001;
+    double c_9 = 20.0;
+    double c_10 = 50.0;
     double beta_N = 10.0;
     double f = 5.0;
     double k_c = 0.001;
@@ -109,23 +109,56 @@ void MyDeltaNotchOdeSystem::EvaluateYDerivatives(double time, const std::vector<
     double fb_N = 10.0;
     double fb_5 = 10.0;
     double fb_10 = 10.0;
-    // double f_bs = 10.0;
+    double f_bs = 10.0;
     double gamma = 0.25;
     double dx = 10.0;
     double sudx = 10.0;
 
-    double beta_D = beta_N * x_distance * (1 - f/12) * (fb_D / (fb_D + notch_intracellular_domain));
+    double test1 = 10.0;
+    if (x_distance >= 3.0){
+      test1 = 19.0 - 3*x_distance;
+    }
+    // else if ((3.0 <= x_distance) && (x_distance < 5.0)){
+    //   test1 = 2.0;
+    // }
+    // else if ((2.0 <= x_distance) && (x_distance < 3.0)){
+    //   test1 = 6.0;
+    // }
+    // else if (x_distance < 2.0){
+    //   test1 = 10.0;
+    // }
+
+    // blistered expression profile
+    double test2 = 0.0;
+    if (x_distance >= 3.0){
+      test2 = 3*x_distance - 9.0;
+    }
+    // if (test2 > 10.0){
+    //   test2 = 10.0;
+    // }
+    // else if ((7.0 <= x_distance) && (x_distance < 8.0)){
+    //   test2 = 6.0;
+    // }
+    // else if ((5.0 <= x_distance) && (x_distance < 7.0)){
+    //   test2 = 2.0;
+    // }
+    // else if (x_distance < 5.0){
+    //   test2 = 0.0;
+    // }
+
+    double bs = test2; //(10*pow(x_distance,2)/(1+pow(x_distance,2)));
+    double beta_D = beta_N * test1 * (1 - f/12) * (fb_D / (fb_D + notch_intracellular_domain)); // (10/(1+pow(x_distance,2)))
 
     // define the fluxes using the above components
-    double r_1 = k_1 * (2 - fb_N/(fb_N + notch_intracellular_domain));
+    double r_1 = k_1 * (2 - (fb_N/(fb_N + notch_intracellular_domain))) * (f_bs/(f_bs + bs));
     double r_2 = k_2 * cell_surface_notch;
-    double r_3 = (k_3 * sudx + c_3) * cell_surface_notch;
-    double r_4 = (k_4 * dx + c_4) * cell_surface_notch;
+    double r_3 = ((k_3 * sudx) + c_3) * cell_surface_notch;
+    double r_4 = ((k_4 * dx) + c_4) * cell_surface_notch;
     double r_5 = k_5 * sudx * (1 - fb_5/(fb_5 + delta)) * dx_dependent_early_endosome_notch;
-    double r_6 = k_6 * mean_delta * cell_surface_notch; // need to incorporate neighbour delta
+    double r_6 = k_6 * mean_delta * cell_surface_notch;
     double r_7 = k_7 * sudx_dependent_notch;
     double r_8 = k_8 * dx_dependent_early_endosome_notch + (c_8a * dx_dependent_early_endosome_notch) / (c_8b + dx_dependent_early_endosome_notch);
-    double r_9 = (k_9 * sudx + c_9) * dx_dependent_late_endosome_notch;
+    double r_9 = ((k_9 * sudx) + c_9) * dx_dependent_late_endosome_notch;
     double r_10 = (k_10 * sudx + c_10) * (1 - fb_10/(fb_10 + delta)) * sudx_dependent_notch;
     double r_11 = k_11 * dx_dependent_early_endosome_notch;
     double r_12 = k_12 * dx_dependent_late_endosome_notch;
@@ -133,8 +166,8 @@ void MyDeltaNotchOdeSystem::EvaluateYDerivatives(double time, const std::vector<
     double r_c = cell_surface_notch * delta/k_c;
 
     // The next 6 lines define the ODE system by Shimizu et al. (2014)
-    rDY[0] = r_1 - r_2 - r_3 - r_4 - r_6;  // d[Notch_1]/dt
-    rDY[1] = r_3 + r_5 + r_7 - r_10;  // d[Notch_2]/dt
+    rDY[0] = r_1 - r_2 - r_3 - r_4 - r_6 - r_c;  // d[Notch_1]/dt
+    rDY[1] = r_3 + r_5 - r_7 - r_10;  // d[Notch_2]/dt
     rDY[2] = r_4 - r_5 - r_8 - r_11;  // d[Notch_3]/dt
     rDY[3] = r_8 - r_9 - r_12;  // d[Notch_4]/dt
     rDY[4] = r_6 + r_7 + r_9 - r_13;  // d[NICD]/dt

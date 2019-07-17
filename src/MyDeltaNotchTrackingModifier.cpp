@@ -69,7 +69,6 @@ void MyDeltaNotchTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 {
     // Make sure the cell population is updated
     rCellPopulation.Update();
-    MARK;
     c_vector<double,2> population_centroid = rCellPopulation.GetCentroidOfCellPopulation();
     // First recover each cell's Notch and Delta concentrations from the ODEs and store in CellData
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
@@ -89,7 +88,6 @@ void MyDeltaNotchTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
         this_distance_to_tissue_centre(0) = 0.0;
         this_distance_to_tissue_centre(1) = 0.0;
         this_distance_to_tissue_centre = this_centroid - population_centroid;
-        PRINT_VECTOR(this_distance_to_tissue_centre);
         double this_x_distance = fabs(this_distance_to_tissue_centre[0]);
 
         double total_notch = this_cell_surface_notch + this_sudx_dependent_notch +

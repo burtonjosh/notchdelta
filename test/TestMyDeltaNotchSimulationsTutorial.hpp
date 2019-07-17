@@ -133,7 +133,7 @@ public:
         EXIT_IF_PARALLEL;
 
         /* First we create a regular vertex mesh. */
-        HoneycombVertexMeshGenerator generator(30, 15);
+        HoneycombVertexMeshGenerator generator(22, 15);
         MutableVertexMesh<2,2>* p_mesh = generator.GetMesh();
 
         /* We then create some cells, each with a cell-cycle model, {{{UniformG1GenerationalCellCycleModel}}} and a subcellular reaction network model
@@ -183,8 +183,9 @@ public:
          * and run the simulation. We can make the simulation run for longer to see more patterning by increasing the end time. */
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.SetOutputDirectory("TestVertexBasedMonolayerWithDeltaNotch");
-        simulator.SetSamplingTimestepMultiple(10);
-        simulator.SetEndTime(35.0);
+        // simulator.SetDt(0.05);
+        simulator.SetSamplingTimestepMultiple(200);
+        simulator.SetEndTime(100.0);
 
         /* Then, we define the modifier class, which automatically updates the values of Delta and Notch within the cells in {{{CellData}}} and passes it to the simulation.*/
         MAKE_PTR(MyDeltaNotchTrackingModifier<2>, p_modifier);
